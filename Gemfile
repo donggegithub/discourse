@@ -84,6 +84,8 @@ gem 'pry-rails', require: false
 gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
 
+gem "capistrano" , "~> 2.15.0"
+gem "rvm-capistrano", :require => false
 
 gem 'rest-client'
 gem 'rinku'
