@@ -86,6 +86,7 @@ gem 'rake'
 
 gem "capistrano" , "~> 2.15.0"
 gem "rvm-capistrano", :require => false
+gem "capistrano-sidekiq"
 
 gem 'rest-client'
 gem 'rinku'

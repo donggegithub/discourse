@@ -3,7 +3,7 @@
 require "./config/boot"
 require "bundler/Capistrano"
 require "rvm/capistrano"
-
+require 'capistrano/sidekiq'
 
 default_environment["PATH"] = "/opt/ruby/bin:/usr/local/bin:/usr/bin:/bin"
 
