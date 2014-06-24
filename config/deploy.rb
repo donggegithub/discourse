@@ -54,8 +54,7 @@ namespace :my_tasks do
 
     symlink_hash = {
       "#{shared_path}/config/discourse_defaults.conf"   => "#{release_path}/config/discourse_defaults.conf",
-      "#{shared_path}/config/s3.yml"   => "#{release_path}/config/s3.yml",
-      "#{shared_path}/uploads"              => "#{release_path}/public/uploads",
+      "#{shared_path}/config/s3.yml"   => "#{release_path}/config/s3.yml"
     }
 
     symlink_hash.each do |source, target|
