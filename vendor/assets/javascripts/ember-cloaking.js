@@ -191,7 +191,7 @@
           }
         });
         toCloak.forEach(function (v) { v.cloak(); });
-        if(self._nextUncloak){Em.run.cancel(self._nextUncloak)}
+        if (self._nextUncloak) { Em.run.cancel(self._nextUncloak); }
         self._nextUncloak = Em.run.later(self, self.uncloakQueue,50);
       });
 
@@ -298,6 +298,9 @@
       @method uncloak
     */
     uncloak: function() {
+      var state = this._state || this.state;
+      if (state !== 'inDOM' && state !== 'preRender') { return; }
+
       if (!this._containedView) {
         var model = this.get('content'),
             controller = null,
@@ -369,15 +372,15 @@
       }
     },
 
-    willDestroyElement: function(){
+    _removeContainedView: function(){
       if(this._containedView){
         this._containedView.remove();
         this._containedView = null;
       }
       this._super();
-    },
+    }.on('willDestroyElement'),
 
-    didInsertElement: function(){
+    _setHeights: function(){
       if (!this._containedView) {
         // setting default height
         // but do not touch if height already defined
@@ -390,7 +393,7 @@
           this.$().css('height', defaultHeight);
         }
       }
-     },
+     }.on('didInsertElement'),
 
     /**
       Render the cloaked view if applicable.

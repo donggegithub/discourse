@@ -147,7 +147,6 @@ module Email
       return @from_value if @from_value
       @from_value = @opts[:from] || SiteSetting.notification_email
       @from_value = alias_email(@from_value)
-      @from_value
     end
 
     def reply_by_email_address
@@ -161,17 +160,19 @@ module Email
                                 else
                                   site_alias_email(@reply_by_email_address)
                                 end
-
-      @reply_by_email_address
     end
 
     def alias_email(source)
-      return source if @opts[:from_alias].blank?
-      "#{@opts[:from_alias]} <#{source}>"
+      return source if @opts[:from_alias].blank? && SiteSetting.email_site_title.blank?
+      if !@opts[:from_alias].blank?
+        "#{Email.cleanup_alias(@opts[:from_alias])} <#{source}>"
+      else
+        "#{Email.cleanup_alias(SiteSetting.email_site_title)} <#{source}>"
+      end
     end
 
     def site_alias_email(source)
-      return "#{SiteSetting.title} <#{source}>"
+      "#{Email.cleanup_alias(SiteSetting.email_site_title.presence || SiteSetting.title)} <#{source}>"
     end
 
   end

@@ -6,8 +6,9 @@ import InviteReplyButton from 'discourse/views/invite-reply-button';
 import ReplyButton from 'discourse/views/reply-button';
 import PinnedButton from 'discourse/views/pinned-button';
 import TopicNotificationsButton from 'discourse/views/topic-notifications-button';
+import DiscourseContainerView from 'discourse/views/container';
 
-export default Discourse.ContainerView.extend({
+export default DiscourseContainerView.extend({
   elementId: 'topic-footer-buttons',
   topicBinding: 'controller.content',
 
@@ -22,7 +23,7 @@ export default Discourse.ContainerView.extend({
     if (Discourse.User.current()) {
       if (!topic.get('isPrivateMessage')) {
         // We hide some controls from private messages
-        if (this.get('topic.details.can_invite_to') && !this.get('topic.category.read_restricted')) {
+        if (this.get('topic.details.can_invite_to')) {
           this.attachViewClass(InviteReplyButton);
         }
         this.attachViewClass(StarButton);
@@ -44,5 +45,3 @@ export default Discourse.ContainerView.extend({
     }
   }
 });
-
-

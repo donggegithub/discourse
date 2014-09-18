@@ -18,7 +18,7 @@ class AdminUserIndexQuery
   end
 
   def filter_by_trust
-    levels = trust_levels.map { |key, value| key.to_s }
+    levels = trust_levels.map { |key, _| key.to_s }
     if levels.include?(params[:query])
       @query.where('trust_level = ?', trust_levels[params[:query].to_sym])
     end
@@ -39,7 +39,6 @@ class AdminUserIndexQuery
       @query.where('username_lower ILIKE :filter or email ILIKE :filter', filter: "%#{params[:filter]}%")
     end
   end
-
 
   def filter_by_ip
     if params[:ip].present?
