@@ -53,8 +53,7 @@ namespace :my_tasks do
     run "mkdir -p #{deploy_to}/shared/pids"
 
     symlink_hash = {
-      "#{shared_path}/config/discourse_defaults.conf"   => "#{release_path}/config/discourse_defaults.conf",
-      "#{shared_path}/config/s3.yml"   => "#{release_path}/config/s3.yml"
+      "#{shared_path}/config/discourse_defaults.conf" => "#{release_path}/config/discourse_defaults.conf"
     }
 
     symlink_hash.each do |source, target|
