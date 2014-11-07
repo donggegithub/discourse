@@ -46,8 +46,12 @@ class ApplicationController < ActionController::Base
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
   end
 
+  def use_crawler_layout?
+    @use_crawler_layout ||= (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent))
+  end
+
   def set_layout
-    has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) ? 'crawler' : 'application'
+    use_crawler_layout? ? 'crawler' : 'application'
   end
 
   rescue_from Exception do |exception|
@@ -256,13 +260,9 @@ class ApplicationController < ActionController::Base
 
     def custom_html_json
       data = {
-        top: SiteContent.content_for(:top),
-        bottom: SiteContent.content_for(:bottom)
+        top: SiteText.text_for(:top),
+        bottom: SiteText.text_for(:bottom)
       }
-
-      if SiteSetting.tos_accept_required && !current_user
-        data[:tos_signup_form_message] = SiteContent.content_for(:tos_signup_form_message)
-      end
 
       if DiscoursePluginRegistry.custom_html
         data.merge! DiscoursePluginRegistry.custom_html
@@ -355,10 +355,9 @@ class ApplicationController < ActionController::Base
 
   protected
 
-    def render_post_json(post)
+    def render_post_json(post, add_raw=true)
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
-      post_serializer.add_raw = true
-      post_serializer.topic_slug = post.topic.slug if post.topic.present?
+      post_serializer.add_raw = add_raw
 
       counts = PostAction.counts_for([post], current_user)
       if counts && counts = counts[post.id]

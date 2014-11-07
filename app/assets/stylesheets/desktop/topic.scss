@@ -17,8 +17,8 @@
 
 #topic-title {
   z-index: 1000;
-  padding: 14px 0 8px 0;
-  margin-bottom: 20px;
+  padding-top: 14px;
+  margin-bottom: 10px;
   .star {
     font-size: 20px;
     margin-top: 6px;
@@ -26,7 +26,7 @@
   }
   #edit-title { width: 500px; }
   .category-combobox {
-    width: 250px;
+    width: 350px;
     .select2-drop {
       left: -9000px;
       width: 248px;
@@ -41,17 +41,13 @@
     line-height: 1.2em;
     overflow: hidden;
     a {color: $primary;}
-    a.badge-category {
-      float: left;
-      vertical-align: top;
-      margin-top: 2px;
-      margin-right: 5px;
-      }
-    a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
+
+
   }
+
+
   .topic-statuses {
     margin-top: -2px;
-
   }
   .select2-container {
     vertical-align: middle;
@@ -59,6 +55,8 @@
     margin-bottom: 2px;
   }
   .private-message-glyph { display: none; }
+
+
 }
 
 .private-message-glyph {
@@ -76,8 +74,7 @@ a.reply-new {
     background: $secondary;
     padding: 1.5px 3px;
     border-radius: 20px;
-    transition: linear 0.15s;
-    -webkit-transition: linear 0.15s;
+    @include transition(all linear .15s);
     margin-left: -20px;
   }
 }
@@ -208,7 +205,8 @@ a:hover.reply-new {
     width: 0;
     border-right: 1px solid  scale-color-diff();
     background-color:  dark-light-diff($success, $secondary, 60%, -35%);
-    transition: width .75s;
+    @include transition(width .75s);
+
   }
 }
 

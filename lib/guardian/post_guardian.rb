@@ -140,12 +140,7 @@ module PostGuardian
         can_see_topic?(post.topic)))
   end
 
-  def can_see_post_revision?(post_revision)
-    return false unless post_revision
-    can_view_post_revisions?(post_revision.post)
-  end
-
-  def can_view_post_revisions?(post)
+  def can_view_edit_history?(post)
     return false unless post
 
     if !post.hidden
@@ -183,5 +178,13 @@ module PostGuardian
 
   def can_see_deleted_posts?
     is_staff?
+  end
+
+  def can_view_raw_email?
+    is_staff?
+  end
+
+  def can_unhide?(post)
+    post.try(:hidden) && is_staff?
   end
 end

@@ -14,6 +14,7 @@ Discourse.ClickTrack = {
     @param {jQuery.Event} e The click event that occurred
   **/
   trackClick: function(e) {
+    if (Discourse.Utilities.selectedText()!=="") return false;  //cancle click if triggered as part of selection.
     var $link = $(e.currentTarget);
     if ($link.hasClass('lightbox')) return true;
 
@@ -115,6 +116,14 @@ Discourse.ClickTrack = {
     if (Discourse.User.currentProp('external_links_in_new_tab')) {
       var win = window.open(trackingUrl, '_blank');
       win.focus();
+
+      // restore href
+      setTimeout(function(){
+        $link.removeClass('no-href');
+        $link.attr('href', $link.data('href'));
+        $link.data('href', null);
+      },50);
+
     } else {
       Discourse.URL.redirectTo(trackingUrl);
     }

@@ -17,11 +17,6 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
 
   postStream: Em.computed.alias('controller.postStream'),
 
-  _updateTitle: function() {
-    var title = this.get('topic.title');
-    if (title) return Discourse.set('title', _.unescape(title));
-  }.observes('topic.loaded', 'topic.title'),
-
   _composeChanged: function() {
     var composerController = Discourse.get('router.composerController');
     composerController.clearState();
@@ -48,9 +43,14 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     });
 
     this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
+      var selection = window.getSelection && window.getSelection();
+      // bypass if we are selecting stuff
+      if (selection.type === "Range" || selection.rangeCount > 0) { return true; }
+
       var $target = $(e.target);
       if ($target.hasClass('mention') || $target.parents('.expanded-embed').length) { return false; }
       return Discourse.ClickTrack.trackClick(e);
+
     });
 
   }.on('didInsertElement'),
@@ -69,35 +69,6 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     this.set('controller.controllers.header.showExtraInfo', false);
 
   }.on('willDestroyElement'),
-
-  debounceLoadSuggested: Discourse.debounce(function(){
-    if (this.get('isDestroyed') || this.get('isDestroying')) { return; }
-
-    var incoming = this.get('topicTrackingState.newIncoming'),
-        suggested = this.get('topic.details.suggested_topics'),
-        topicId = this.get('topic.id');
-
-    if(suggested) {
-      var existing = _.invoke(suggested, 'get', 'id'),
-          lookup = _.chain(incoming)
-                    .last(Discourse.SiteSettings.suggested_topics)
-                    .reverse()
-                    .union(existing)
-                    .uniq()
-                    .without(topicId)
-                    .first(Discourse.SiteSettings.suggested_topics)
-                    .value();
-
-      Discourse.TopicList.loadTopics(lookup, "").then(function(topics){
-        suggested.clear();
-        suggested.pushObjects(topics);
-      });
-    }
-  }, 1000),
-
-  hasNewSuggested: function(){
-    this.debounceLoadSuggested();
-  }.observes('topicTrackingState.incomingCount'),
 
   gotFocus: function(){
     if (Discourse.get('hasFocus')){

@@ -1,6 +1,7 @@
 import ObjectController from 'discourse/controllers/object';
+import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
-export default ObjectController.extend({
+export default ObjectController.extend(CanCheckEmails, {
 
   viewingSelf: function() {
     return this.get('content.username') === Discourse.User.currentProp('username');
@@ -43,5 +44,4 @@ export default ObjectController.extend({
   privateMessagesActive: Em.computed.equal('pmView', 'index'),
   privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
   privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread')
-
 });

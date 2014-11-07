@@ -287,12 +287,16 @@ export default Discourse.View.extend({
     var rebakePostIcon = '<i class="fa fa-cog"></i>',
         rebakePostText = I18n.t('post.controls.rebake');
 
+    var unhidePostIcon = '<i class="fa fa-eye"></i>',
+        unhidePostText = I18n.t('post.controls.unhide');
+
     var html = '<div class="post-admin-menu">' +
                  '<h3>' + I18n.t('admin_title') + '</h3>' +
                  '<ul>' +
                    '<li class="btn btn-admin" data-action="toggleWiki">' + wikiIcon + wikiText + '</li>' +
                    '<li class="btn btn-admin" data-action="togglePostType">' + postTypeIcon + postTypeText + '</li>' +
                    '<li class="btn btn-admin" data-action="rebakePost">' + rebakePostIcon + rebakePostText + '</li>' +
+                   (post.hidden ? '<li class="btn btn-admin" data-action="unhidePost">' + unhidePostIcon + unhidePostText + '</li>' : '') +
                  '</ul>' +
                '</div>';
 
@@ -300,9 +304,12 @@ export default Discourse.View.extend({
   },
 
   clickAdmin: function() {
-    var $adminMenu = this.$('.post-admin-menu');
-    this.set('adminMenu', $adminMenu);
-    $adminMenu.show();
+    var $postAdminMenu = this.$(".post-admin-menu");
+    $postAdminMenu.show();
+    $("html").on("mouseup.post-admin-menu", function() {
+      $postAdminMenu.hide();
+      $("html").off("mouseup.post-admin-menu");
+    });
   },
 
   clickToggleWiki: function() {
@@ -315,6 +322,10 @@ export default Discourse.View.extend({
 
   clickRebakePost: function () {
     this.get("controller").send("rebakePost", this.get("post"));
+  },
+
+  clickUnhidePost: function () {
+    this.get("controller").send("unhidePost", this.get("post"));
   },
 
   buttonForShowMoreActions: function() {
